@@ -5,6 +5,7 @@ const db = require('./config/db');
 //Create AUTH routes in backend
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const verifyToken=require("./middleware/authMiddleware");
 
 const app = express();
 app.use(cors());
@@ -129,7 +130,7 @@ app.delete('/users/:id', (req, res) => {
 
 })
 
-app.get('/users', (req, res) => {
+app.get('/users',verifyToken, (req, res) => {
     db.query("SELECT user_id, user_name, email, role  FROM users", (err, result) => {
         if (err) return res.status(500).send(err);
 
@@ -139,6 +140,7 @@ app.get('/users', (req, res) => {
 
 
 });
+
 app.get('/products', (req, res) => {
     res.send("products")
 })
@@ -146,3 +148,7 @@ app.get('/products', (req, res) => {
 app.listen(3000, () => {
     console.log("the sever work !")
 });
+
+
+
+
