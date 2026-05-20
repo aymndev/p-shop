@@ -6,6 +6,7 @@ const db = require('./config/db');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const verifyToken=require("./middleware/authMiddleware");
+const roleMiddleware =require('./middleware/roleMiddelware') ;
 
 const app = express();
 app.use(cors());
@@ -52,16 +53,16 @@ app.post('/users', (req, res) => {
 
 });
 app.post("/register", (req, res) => {
-    const { name, email, password } = req.body;
+    const { name, email, password ,role} = req.body;
 
-    if (!name || !email || !password) {
+    if (!name || !email || !password || !role) {
         return res.status(400).send("All fields required");
     }
     bcrypt.hash(password, 10, (err, hash) => {
         if (err) return res.send(err);
         db.query(
-            "INSERT INTO users (user_name, email, password) VALUES (?,?,?)",
-            [name, email, hash],
+            "INSERT INTO users (user_name, email, password,role) VALUES (?,?,?,?)",
+            [name, email, hash,role],
             (err, result) => {
                 if (err) return res.send(err);
                 res.status(201).json({
@@ -92,7 +93,11 @@ app.post("/login", (req, res) => {
 
                 // create token
                 const token = jwt.sign(
-                    { id: user.user_id, email: user.email },
+                    { id: user.user_id, 
+                    email: user.email,
+                    role:user.role
+                
+                },
                     "secretkey",
                     { expiresIn: "1h" }
                 );
@@ -106,8 +111,14 @@ app.post("/login", (req, res) => {
         }
     )
 })
-app.delete('/users/:id', (req, res) => {
+app.delete('/users/:id',verifyToken,roleMiddleware('admin') ,(req, res) => {
     const user = req.params.id;
+
+
+    if (req.params.id == req.user.id) {
+        return res.status(403).send("You can't delete yourself");
+    }
+
 
     db.query(`DELETE  FROM users WHERE user_id=?`,
         [user],
