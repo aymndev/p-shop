@@ -53,16 +53,16 @@ app.post('/users', (req, res) => {
 
 });
 app.post("/register", (req, res) => {
-    const { name, email, password ,role} = req.body;
+    const { name, email, password } = req.body;
 
-    if (!name || !email || !password || !role) {
+    if (!name || !email || !password) {
         return res.status(400).send("All fields required");
     }
     bcrypt.hash(password, 10, (err, hash) => {
         if (err) return res.send(err);
         db.query(
-            "INSERT INTO users (user_name, email, password,role) VALUES (?,?,?,?)",
-            [name, email, hash,role],
+            "INSERT INTO users (user_name, email, password) VALUES (?,?,?)",
+            [name, email, hash],
             (err, result) => {
                 if (err) return res.send(err);
                 res.status(201).json({
@@ -75,6 +75,40 @@ app.post("/register", (req, res) => {
     });
 
 });
+// for products
+app.post("/product",verifyToken,roleMiddleware('admin'),(req,res)=>{
+    const { name, description, price, stock, image }=req.body;
+    db.query("INSERT INTO products (name, description, price, stock, image) VALUES (?,?,?,?,?)",
+        [name,description,price,stock,image],
+        (err,result)=>{
+            if (err) return res.send(err);
+            res.status(201).json({
+                message:"the product is being created ",
+                id : result.insertId
+            });
+        }
+    );
+});
+app.delete("/product/:id",verifyToken,roleMiddleware('admin'), (req,res)=>{
+    const product= req.params.id;
+
+    db.query("DELETE FROM products WHERE product_id = ? ",
+        [product],
+        (err,result)=>{
+            if(err){
+                return res.status(500).send("internal server eror ")
+            }
+            const e= result.affectedRows;
+            if(e===1){
+                return res.status(200).send("the product is being deleted !");
+            }else{
+                return res.status(404).send("the product not found ");
+            }
+        }
+    )
+
+
+})
 app.post("/login", (req, res) => {
     const { email, password } = req.body;
     db.query(

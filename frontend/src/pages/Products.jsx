@@ -15,7 +15,7 @@ export default function Products() {
     }, []);
 
     return (
-        <div>
+        <div className=" flex  justify-center">
             <h2>Products</h2>
 
             {Array.isArray(products) ? (

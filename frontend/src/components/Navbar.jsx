@@ -2,35 +2,25 @@ import { Link } from "react-router-dom";
 
 export default function Navbar() {
     return (
-        <nav style={styles.nav}>
 
-            <h3>My Shop 🛒</h3>
+        <div className="flex flex-col ">
+            <nav  className=" flex flex-row items-center gap-5 justify-between bg-green-900 h-[5rem] " >
 
-            <div style={styles.links}>
+                <h3 className="ml-[5rem] font-bold" >My Shop </h3>
 
-                <Link to="/" style={styles.link}>Products</Link>
-                <Link to="/login" style={styles.link}>Login</Link>
+                <div className="flex gap-9 m-6 font-bold text-white   ">
 
-            </div>
+                    <Link to="/" >Products</Link>
+                    <Link to="/orders" >Orders</Link>
+                    <Link to="/login" >Login</Link>
+                  
 
-        </nav>
+                </div>
+
+            </nav>
+
+        </div>
+
     );
 }
 
-const styles = {
-    nav: {
-        display: "flex",
-        justifyContent: "space-between",
-        padding: "10px",
-        background: "#222",
-        color: "white"
-    },
-    links: {
-        display: "flex",
-        gap: "10px"
-    },
-    link: {
-        color: "white",
-        textDecoration: "none"
-    }
-};

@@ -5,10 +5,10 @@ import Navbar from "./components/Navbar";
 
 export default function App() {
     return (
-        <BrowserRouter>
-            <Navbar />
+        <BrowserRouter >
+            <Navbar  />
 
-            <Routes>
+            <Routes >
                 <Route path="/" element={<Products />} />
                 <Route path="/login" element={<Login />} />
             </Routes>
