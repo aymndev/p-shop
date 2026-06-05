@@ -138,7 +138,8 @@ app.post("/login", (req, res) => {
 
                 res.json({
                     message: "Login successful",
-                    token
+                    token,
+                    role: user.role
                 });
             });
 
@@ -187,8 +188,18 @@ app.get('/users',verifyToken, (req, res) => {
 });
 
 app.get('/products', (req, res) => {
-    res.send("products")
-})
+    db.query(
+        "SELECT * FROM products",
+        (err, result) => {
+            if (err) {
+                return res.status(500).send(err);
+            }
+
+            res.json(result);
+        }
+    );
+});
+
 
 app.listen(3000, () => {
     console.log("the sever work !")

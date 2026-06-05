@@ -13,6 +13,8 @@ export default function Login() {
             });
 
             localStorage.setItem("token", res.data.token);
+            localStorage.setItem("role", res.data.role);
+            window.location.href = "/";
             alert("Logged in!");
         } catch (err) {
             alert("Login failed");

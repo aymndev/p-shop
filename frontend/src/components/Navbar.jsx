@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 
 export default function Navbar() {
+    const role = localStorage.getItem('role');
+    console.log(role);
     return (
 
         <div className="flex flex-col ">
@@ -13,6 +15,13 @@ export default function Navbar() {
                     <Link to="/" >Products</Link>
                     <Link to="/orders" >Orders</Link>
                     <Link to="/login" >Login</Link>
+                    { role === 'admin' &&
+                    <>
+                    <Link to="/admin" >Dashboard</Link>
+                    <Link to="/users" >ManageUsers</Link>
+                    </>
+                    
+                    }
                   
 
                 </div>

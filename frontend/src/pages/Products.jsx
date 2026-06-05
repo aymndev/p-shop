@@ -8,7 +8,10 @@ export default function Products() {
     useEffect(() => {
         api.get("/products")
             .then(res => {
-                console.log("API RESPONSE:", res.data);
+                console.log(products);
+           
+                console.log("DATA:", res.data);
+              
                 setProducts(res.data);
             })
             .catch(err => console.log(err));
